@@ -6,21 +6,21 @@
 /*   By: cahn <cahn@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/23 17:14:59 by cahn              #+#    #+#             */
-/*   Updated: 2023/08/08 20:16:06 by cahn             ###   ########.fr       */
+/*   Updated: 2023/08/09 21:08:35 by cahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void    print_error_exit(char *err)
+void	print_error_exit(char *err)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (err[i])
-        ++i;
-    write(1, err, i);
-    exit(1);
+	i = 0;
+	while (err[i])
+		++i;
+	write(1, err, i);
+	exit(1);
 }
 
 int	ft_atoi(const char *str)
@@ -47,4 +47,19 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	return (num * minus);
+}
+
+int	key_event(int keycode, t_fdf *fdf)
+{
+	if (keycode == KEY_ESC)
+	{
+		mlx_destroy_window(fdf->mlx.init, fdf->mlx.win);
+		exit(0);
+	}
+	return (0);
+}
+
+int	close_button(void)
+{
+	exit(0);
 }

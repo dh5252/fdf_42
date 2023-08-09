@@ -6,13 +6,13 @@
 #    By: cahn <cahn@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/08 16:24:19 by cahn              #+#    #+#              #
-#    Updated: 2023/08/08 21:15:05 by cahn             ###   ########.fr        #
+#    Updated: 2023/08/09 21:06:40 by cahn             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
 
-SRCS = draw.c ft_split.c get_next_line.c get_next_line_utils.c main.c parsing.c utility.c
+SRCS = draw.c ft_split.c get_next_line.c get_next_line_utils.c main.c parsing.c utility.c utility2.c
 OBJS = $(SRCS:.c=.o)
 
 CC = cc

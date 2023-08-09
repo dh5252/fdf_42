@@ -6,33 +6,33 @@
 /*   By: cahn <cahn@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 15:56:19 by cahn              #+#    #+#             */
-/*   Updated: 2023/08/08 16:29:50 by cahn             ###   ########.fr       */
+/*   Updated: 2023/08/09 21:11:25 by cahn             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	put_pixel(t_fdf *fdf, int y, int z, double uvector)
+void	put_pixel(t_fdf *fdf, int y, int z)
 {
 	int		pos;
 
 	if ((y > 0 && z > 0) && (y < WIN_WIDTH && z < WIN_HEIGHT))
 	{
 		pos = (y * 4) + (z * WIN_WIDTH * 4);
-		fdf->img.data[pos] = fdf->color.r + uvector;
-		fdf->img.data[pos + 1] = fdf->color.g + uvector;
-		fdf->img.data[pos + 2] = fdf->color.b + uvector;
-		fdf->img.data[pos + 3] = 0x7F + uvector;
+		fdf->img.data[pos] = fdf->color.b;
+		fdf->img.data[pos + 1] = fdf->color.g;
+		fdf->img.data[pos + 2] = fdf->color.r;
+		fdf->img.data[pos + 3] = 0;
 	}
 }
 
 void	draw_lines(t_fdf *fdf)
 {
-	double	y;
-	double	z;
-	double	delta_y;
-	double	delta_z;
-	double	uvector;
+	double		y;
+	double		z;
+	double		delta_y;
+	double		delta_z;
+	double		uvector;
 
 	y = fdf->map.y0;
 	z = fdf->map.z0;
@@ -42,8 +42,8 @@ void	draw_lines(t_fdf *fdf)
 	delta_y /= uvector;
 	delta_z /= uvector;
 	while (uvector > 0)
-	{
-		put_pixel(fdf, y, z, uvector);
+	{	
+		put_pixel(fdf, y, z);
 		y += delta_y;
 		z += delta_z;
 		uvector -= 1;
@@ -55,18 +55,19 @@ void	draw_horizontal(t_fdf *fdf, int y, int z)
 	int		yt;
 	int		zt;
 
+	set_color(fdf, fdf->map.values[z][y].rgb);
 	yt = y - fdf->map.width / 2;
 	zt = z - fdf->map.height / 2;
 	fdf->map.y0 = fdf->map.angle_y * (yt - zt) * fdf->map.zoom;
 	fdf->map.z0 = fdf->map.angle_z * (yt + zt) * fdf->map.zoom;
-	fdf->map.z0 -= fdf->map.values[z][y] * fdf->map.x_value;
+	fdf->map.z0 -= fdf->map.values[z][y].value * fdf->map.x_value;
 	fdf->map.y1 = fdf->map.angle_y * ((yt + 1) - zt) * fdf->map.zoom;
 	fdf->map.z1 = fdf->map.angle_z * ((yt + 1) + zt) * fdf->map.zoom;
-	fdf->map.z1 -= fdf->map.values[z][y + 1] * fdf->map.x_value;
-	fdf->map.y0 += (WIN_WIDTH / 2) + fdf->map.coordi_y;
-	fdf->map.y1 += (WIN_WIDTH / 2) + fdf->map.coordi_y;
-	fdf->map.z0 += (WIN_HEIGHT / 2) + fdf->map.coordi_z;
-	fdf->map.z1 += (WIN_HEIGHT / 2) + fdf->map.coordi_z;
+	fdf->map.z1 -= fdf->map.values[z][y + 1].value * fdf->map.x_value;
+	fdf->map.y0 += (WIN_WIDTH / 2);
+	fdf->map.y1 += (WIN_WIDTH / 2);
+	fdf->map.z0 += (WIN_HEIGHT / 2);
+	fdf->map.z1 += (WIN_HEIGHT / 2);
 	draw_lines(fdf);
 }
 
@@ -75,18 +76,19 @@ void	draw_vertical(t_fdf *fdf, int y, int z)
 	int		yt;
 	int		zt;
 
+	set_color(fdf, fdf->map.values[z][y].rgb);
 	yt = y - fdf->map.width / 2;
 	zt = z - fdf->map.height / 2;
 	fdf->map.y0 = fdf->map.angle_y * (yt - zt) * fdf->map.zoom;
 	fdf->map.z0 = fdf->map.angle_z * (yt + zt) * fdf->map.zoom;
-	fdf->map.z0 -= fdf->map.values[z][y] * fdf->map.x_value;
+	fdf->map.z0 -= fdf->map.values[z][y].value * fdf->map.x_value;
 	fdf->map.y1 = fdf->map.angle_y * (yt - (zt + 1)) * fdf->map.zoom;
 	fdf->map.z1 = fdf->map.angle_z * (yt + (zt + 1)) * fdf->map.zoom;
-	fdf->map.z1 -= fdf->map.values[z + 1][y] * fdf->map.x_value;
-	fdf->map.y0 += (WIN_WIDTH / 2) + fdf->map.coordi_y;
-	fdf->map.y1 += (WIN_WIDTH / 2) + fdf->map.coordi_y;
-	fdf->map.z0 += (WIN_HEIGHT / 2) + fdf->map.coordi_z;
-	fdf->map.z1 += (WIN_HEIGHT / 2) + fdf->map.coordi_z;
+	fdf->map.z1 -= fdf->map.values[z + 1][y].value * fdf->map.x_value;
+	fdf->map.y0 += (WIN_WIDTH / 2);
+	fdf->map.y1 += (WIN_WIDTH / 2);
+	fdf->map.z0 += (WIN_HEIGHT / 2);
+	fdf->map.z1 += (WIN_HEIGHT / 2);
 	draw_lines(fdf);
 }
 
